@@ -39,21 +39,12 @@
                 </ul>
             </div>
         </nav>
-        <div class="row container">
-            <main class="order-1 col-9">
-                <div class="jumbotron">
-                    <h1 hidden id="entityHeader" class="display-4"></h1>
+            <main class="order-1 container-fluid">
+                <div hidden class="jumbotron" id="entityJumbotron">
+                    <h1 id="entityHeader" class="display-4"></h1>
                     <div id="entities" class="container"></div>
                 </div>
-
             </main>
-
-            <aside class="order-0 col-3">
-                <div class="container col">
-
-                </div>
-            </aside>
-        </div>
         <footer class="row container">
             Footer
         </footer>
@@ -75,6 +66,9 @@
         <span hidden class="id"></span>
         <h2 class="name"></h2>
         <p class="technologies"></p>
+        <div class="currentAssignments">
+            Assigned to:
+        </div>
     </div>
 </template>
 
