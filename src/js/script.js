@@ -1,46 +1,69 @@
 let databaseURL = "http://localhost:4000/";
+let entityHeader = document.getElementById("entityHeader");
 
 window.onload = function () {
-    load("projects");
+    entityHeader.innerText = "";
+};
+
+function load(entities) {
+    get(entities).then(r => show(entities, r));
 }
 
-function load(entity) {
-    get(entity).then(show);
-
-}
-
-function get(entity) {
-    return fetch(databaseURL + entity).then(r => r.json());
+function get(entities) {
+    return fetch(databaseURL + entities + "/").then(r => r.json());
 }
 
 function show(entityName, collection) {
+
+    entityHeader.innerText = getCapitalized(entityName);
+    entityHeader.removeAttribute("hidden");
+
     let entitiesView = document.getElementById("entities");
     let template = document.getElementById(entityName + "Template").content;
 
     entitiesView.innerHTML = "";
     for (let entity of collection) {
-        let templateClone = template.querySelector(getSingleFromPlural(entityName)).cloneNode(true);
+        let templateClone = template.querySelector("." + getSingleFromPlural(entityName)).cloneNode(true);
 
-        updateTemplate(templateClone, entity);
+        updateTemplate(templateClone, entity, entityName);
         entitiesView.appendChild(templateClone);
     }
 }
 
 function getSingleFromPlural(pluralNoun) {
-    return pluralNoun.substring(0, pluralNoun.length - 1);
+    let result = pluralNoun.substring(0, pluralNoun.length - 1);
+    return result;
 }
 
-function updateTemplate(template, entity) {
-    switch (entity) {
+function getCapitalized(string) {
+    return string.substring(0, 1).toUpperCase() + string.substring(1);
+}
+
+function updateTemplate(template, entity, entityName) {
+    let entityId = template.querySelector(".id");
+    entityId.innerText = entity.id;
+
+    switch (entityName) {
         case "assignments": {
 
             break;
         }
+        case "employees": {
+            let entityName = template.querySelector(".name");
+            entityName.innerText = entity.name;
+            let technologies = template.querySelector(".technologies");
+            technologies.innerText = entity.technologies;
+            break;
+        }
+        case "projects": {
+            let entityName = template.querySelector(".name");
+            entityName.innerText = entity.name;
+            let technologies = template.querySelector(".technologies");
+            technologies.innerText = entity.technologies;
+            break;
+        }
         default : {
-            let studentName = template.querySelector(".name");
-            studentName.innerText = entity.name;
-            let studentGrade = template.querySelector(".technologies");
-            studentGrade.innerText = entity.technologies;
+
         }
     }
 }

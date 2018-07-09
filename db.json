@@ -4,6 +4,11 @@
       "id": 1,
       "name": "Jason B.",
       "technologies": "Android Frontend"
+    },
+    {
+      "id": 2,
+      "name": "Emily A.",
+      "technologies": "QA"
     }
   ],
   "projects": [

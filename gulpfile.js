@@ -1,10 +1,6 @@
 var gulp = require('gulp');
 var browserSync = require('browser-sync').create();
 var sass = require('gulp-sass');
-var jsonServer = require('gulp-json-srv');
-
-var server = jsonServer.create();
-jsonServer.port = 4000;
 
 // Compile sass into CSS & auto-inject into browsers
 gulp.task('sass', function () {
@@ -32,10 +28,4 @@ gulp.task('serve', ['sass'], function () {
     gulp.watch("src/*.html").on('change', browserSync.reload);
 });
 
-//Stars JSONServer
-gulp.task('start', function () {
-    return gulp.src("data.json")
-        .pipe(server.pipe());
-});
-
-gulp.task('default', ['js', 'serve', 'start']);
+gulp.task('default', ['js', 'serve']);

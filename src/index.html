@@ -41,7 +41,11 @@
         </nav>
         <div class="row container">
             <main class="order-1 col-9">
-                <div class="container entities"></div>
+                <div class="jumbotron">
+                    <h1 hidden id="entityHeader" class="display-4"></h1>
+                    <div id="entities" class="container"></div>
+                </div>
+
             </main>
 
             <aside class="order-0 col-3">
@@ -60,7 +64,7 @@
 <template id="projectsTemplate">
     <div class="project">
         <span hidden class="id"></span>
-        <h2 class="name"></h2>
+        <h2 class="name" onclick="load"></h2>
         <p class="technologies"></p>
     </div>
 </template>
@@ -76,7 +80,7 @@
 
 
 <template id="assignmentsTemplate">
-    <div class="assignment row">
+    <div class="assignment">
         <span hidden class="id"></span>
         <span hidden class="employeeId"></span>
         <span hidden class="companyId"></span>
