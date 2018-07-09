@@ -1,0 +1,18 @@
+{
+  "employees": [
+    {
+      "id": 1,
+      "name": "Jason B.",
+      "technologies": "Android Frontend"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "name": "Making your life better",
+      "technologies": "Android IOS Frontend Backend"
+    }
+  ],
+  "assignments": [
+  ]
+}

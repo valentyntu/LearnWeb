@@ -1,0 +1,17 @@
+//$bg-color: gray;
+$aside-bg-color: white;
+
+body {
+  font-family: Arial;
+  height: 100vh;
+  //background: $bg-color;
+}
+
+aside{
+  background: $aside-bg-color;
+  height: 100vh;
+}
+
+main{
+  height: 100vh;
+}

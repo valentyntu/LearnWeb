@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Management</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="container">
+    <div class="col">
+        <nav class="nav navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand ml-3" href="#">Company Management</a>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="load('projects')">
+                            Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="load('projects')">
+                            Projects
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="load('employees')">
+                            Employees
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Contact
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="row container">
+            <main class="order-1 col-9">
+                <div class="container entities"></div>
+            </main>
+
+            <aside class="order-0 col-3">
+                <div class="container col">
+
+                </div>
+            </aside>
+        </div>
+        <footer class="row container">
+            Footer
+        </footer>
+    </div>
+</div>
+
+
+<template id="projectsTemplate">
+    <div class="project">
+        <span hidden class="id"></span>
+        <h2 class="name"></h2>
+        <p class="technologies"></p>
+    </div>
+</template>
+
+
+<template id="employeesTemplate">
+    <div class="employee">
+        <span hidden class="id"></span>
+        <h2 class="name"></h2>
+        <p class="technologies"></p>
+    </div>
+</template>
+
+
+<template id="assignmentsTemplate">
+    <div class="assignment row">
+        <span hidden class="id"></span>
+        <span hidden class="employeeId"></span>
+        <span hidden class="companyId"></span>
+        <p class="dateStartWorking"></p>
+        <p class="dateEndWorking"></p>
+    </div>
+</template>
+
+<script src="js/script.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>
