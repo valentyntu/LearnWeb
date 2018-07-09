@@ -2,16 +2,28 @@ let databaseURL = "http://localhost:4000/";
 let entityHeader = document.getElementById("entityHeader");
 
 window.onload = function () {
-    load("employees");
-    entityHeader.innerText = "";
+    loadEmployees();
 };
 
-function load(entities) {
-    get(entities).then(r => show(entities, r));
+function loadEmployees() {
+    return load("employees");
+}
+
+function loadProjects() {
+    return load("projects");
+}
+
+function loadAssignments() {
+    return load("assignments");
 }
 
 function get(entities) {
-    return fetch(databaseURL + entities + "/").then(r => r.json());
+    return fetch(databaseURL + entities + "/")
+        .then(r => r.json());
+}
+
+function load(entities) {
+    get(entities).then(r => show(entities, r));
 }
 
 function show(entityName, collection) {
@@ -27,27 +39,44 @@ function show(entityName, collection) {
     entitiesView.innerHTML = "";
     for (let entity of collection) {
         let templateClone = template.querySelector("." + getSingleFromPlural(entityName)).cloneNode(true);
-
+        templateClone.querySelector(".id").innerText = entity.id;
         updateTemplate(templateClone, entity, entityName);
         entitiesView.appendChild(templateClone);
     }
 }
 
-function getSingleFromPlural(pluralNoun) {
-    let result = pluralNoun.substring(0, pluralNoun.length - 1);
-    return result;
-}
-
-function getCapitalized(string) {
-    return string.substring(0, 1).toUpperCase() + string.substring(1);
-}
-
 function getCurrentAssignments(employee) {
-    return fetch(databaseURL + "assignments/?employee_id=" + employee.id).then(r => r.json());
+    return fetch(databaseURL + "assignments/?employee_id=" + employee.id)
+        .then(r => r.json());
 }
 
 function getCurrentProjects(employee) {
-    return getCurrentAssignments(employee).then(a => (fetch(databaseURL + "projects/?id=" + a.project_id)).then(r => r.json())).then(r => r.json());
+    return getCurrentAssignments(employee)
+        .then(a => fetch(databaseURL + "projects/?id=" + a.project_id))
+        .then(p => p.json());
+}
+
+function updateEmployeeTemplate(template, entity) {
+    let entityName = template.querySelector(".name");
+    entityName.innerText = entity.name;
+
+    let technologies = template.querySelector(".technologies");
+    technologies.innerText = entity.technologies;
+
+    let currentAssignments = template.querySelector(".currentAssignments");
+    getCurrentProjects(entity).then(p => currentAssignments.innerText += " " + p.name + " ");
+}
+
+function updateProjectTemplate(template, entity) {
+    let entityName = template.querySelector(".name");
+    entityName.innerText = entity.name;
+
+    let technologies = template.querySelector(".technologies");
+    technologies.innerText = entity.technologies;
+}
+
+function updateAssignmentTemplate() {
+
 }
 
 function updateTemplate(template, entity, entityName) {
@@ -56,30 +85,15 @@ function updateTemplate(template, entity, entityName) {
 
     switch (entityName) {
         case "assignments": {
-
+            updateAssignmentTemplate();
             break;
         }
         case "employees": {
-            let entityName = template.querySelector(".name");
-            entityName.innerText = entity.name;
-            let technologies = template.querySelector(".technologies");
-            technologies.innerText = entity.technologies;
-            let currentAssignments = template.querySelector(".currentAssignments");
-            let employeesProjects = [];
-            getCurrentProjects(entity).then(p => currentAssignments.innerText += " " + p.name + ",");
-            if (employeesProjects.length === 0) {
-
-            } else {
-
-            }
-
+            updateEmployeeTemplate(template, entity);
             break;
         }
         case "projects": {
-            let entityName = template.querySelector(".name");
-            entityName.innerText = entity.name;
-            let technologies = template.querySelector(".technologies");
-            technologies.innerText = entity.technologies;
+            updateProjectTemplate(template, entity);
             break;
         }
         default : {
@@ -88,22 +102,14 @@ function updateTemplate(template, entity, entityName) {
     }
 }
 
-function addStudent(student) {
-    return fetch(employeesURL, {
-        method: 'POST',
-        body: JSON.stringify(student),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
+function getSingleFromPlural(pluralNoun) {
+    if (pluralNoun.endsWith("ies")) {
+        return pluralNoun.replace("ies", "y");
+    } else {
+        return pluralNoun.substring(0, pluralNoun.length - 1);
+    }
 }
 
-function extracted(form) {
-    form.addEventListener("submit", ev => {
-        ev.preventDefault();
-        let name = document.getElementById("nameInput").value;
-        let grade = document.getElementById("gradeInput").value;
-        addStudent({fullName: name, grade: grade}).then(load(e));
-    });
-
+function getCapitalized(string) {
+    return string.substring(0, 1).toUpperCase() + string.substring(1);
 }

@@ -17,34 +17,34 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" onclick="load('projects')">
+                        <a class="nav-link" onclick="loadProjects()">
                             Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" onclick="load('projects')">
+                        <a class="nav-link" onclick="loadProjects()">
                             Projects
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" onclick="load('employees')">
+                        <a class="nav-link" onclick="loadEmployees()">
                             Employees
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Contact
+                        <a class="nav-link" onclick="loadAssignments()">
+                            Assignments
                         </a>
                     </li>
                 </ul>
             </div>
         </nav>
-            <main class="order-1 container-fluid">
-                <div hidden class="jumbotron" id="entityJumbotron">
-                    <h1 id="entityHeader" class="display-4"></h1>
-                    <div id="entities" class="container"></div>
-                </div>
-            </main>
+        <main class="order-1 container-fluid">
+            <div hidden class="jumbotron" id="entityJumbotron">
+                <h1 id="entityHeader" class="display-4"></h1>
+                <div id="entities" class="container"></div>
+            </div>
+        </main>
         <footer class="row container">
             Footer
         </footer>
