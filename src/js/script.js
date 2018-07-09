@@ -2,7 +2,7 @@ let databaseURL = "http://localhost:4000/";
 let entityHeader = document.getElementById("entityHeader");
 
 window.onload = function () {
-    loadEmployees();
+    loadProjects();
 };
 
 function loadEmployees() {
@@ -26,12 +26,14 @@ function load(entities) {
     get(entities).then(r => show(entities, r));
 }
 
-function show(entityName, collection) {
+function showJumbotron() {
+    document.getElementById("entityJumbotron").removeAttribute("hidden");
+}
 
+function show(entityName, collection) {
     entityHeader.innerText = getCapitalized(entityName);
 
-    let entityJumbotron = document.getElementById("entityJumbotron");
-    entityJumbotron.removeAttribute("hidden");
+    showJumbotron();
 
     let entitiesView = document.getElementById("entities");
     let template = document.getElementById(entityName + "Template").content;
@@ -61,10 +63,7 @@ function updateEmployeeTemplate(template, entity) {
     entityName.innerText = entity.name;
 
     let technologies = template.querySelector(".technologies");
-    technologies.innerText = entity.technologies;
-
-    let currentAssignments = template.querySelector(".currentAssignments");
-    getCurrentProjects(entity).then(p => currentAssignments.innerText += " " + p.name + " ");
+    technologies.innerText += entity.technologies;
 }
 
 function updateProjectTemplate(template, entity) {
@@ -72,7 +71,13 @@ function updateProjectTemplate(template, entity) {
     entityName.innerText = entity.name;
 
     let technologies = template.querySelector(".technologies");
-    technologies.innerText = entity.technologies;
+    technologies.innerText += entity.technologies;
+
+    let description = template.querySelector(".description");
+    description.innerText += entity.description;
+
+    let logo = template.querySelector(".logo");
+    logo.setAttribute("src", entity.image);
 }
 
 function updateAssignmentTemplate() {

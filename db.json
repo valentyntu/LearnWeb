@@ -19,8 +19,24 @@
   "projects": [
     {
       "id": 1,
-      "name": "Making your life better",
-      "technologies": "Android IOS Frontend Backend"
+      "name": "Portable Assistant",
+      "image": "https://dmarket.dp.ua/images/feature_variant/21/Assistant.jpg.pagespeed.ce._hgSZeiFEN.jpg",
+      "description": "A small mobile application to help everybody.",
+      "technologies": "Android, IOS, Frontend, Backend"
+    },
+    {
+      "id": 2,
+      "image": "https://www.rainbowtecbd.com/wp-content/uploads/2017/04/WordPress-Logo-Free-Download-PNG.png",
+      "name": "Main website",
+      "description": "Internal project - the main website of the company.",
+      "technologies": "Android, IOS, Frontend, Backend, Wordpress"
+    },
+    {
+      "id": 3,
+      "image": "https://image.freepik.com/free-vector/library-logo_23-2147505735.jpg",
+      "name": "E-library",
+      "description": "Web-application for finding, buying and downloading books.",
+      "technologies": "WEB, Frontend, Backend"
     }
   ],
   "assignments": [
