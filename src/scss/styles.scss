@@ -1,17 +1,12 @@
-//$bg-color: gray;
-$aside-bg-color: white;
-
 body {
   font-family: Arial;
-  height: 100vh;
-  //background: $bg-color;
+  background-color: #e7ebf0;
 }
 
-aside{
-  background: $aside-bg-color;
-  height: 100vh;
+#entityJumbotron{
+  background-color: white;
 }
 
-main{
-  height: 100vh;
+.project{
+  width: 21rem;
 }

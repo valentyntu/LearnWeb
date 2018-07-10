@@ -84,6 +84,12 @@ function updateAssignmentTemplate() {
 
 }
 
+let help = [
+    "",
+    "Here you can see all current projects. To see detailed info and assign new employees press 'Manage' button.",
+    ""
+];
+
 function updateTemplate(template, entity, entityName) {
     let entityId = template.querySelector(".id");
     entityId.innerText = entity.id;
@@ -91,14 +97,17 @@ function updateTemplate(template, entity, entityName) {
     switch (entityName) {
         case "assignments": {
             updateAssignmentTemplate();
+            document.getElementById("entityLead").innerText = help[2];
             break;
         }
         case "employees": {
             updateEmployeeTemplate(template, entity);
+            document.getElementById("entityLead").innerText = help[0];
             break;
         }
         case "projects": {
             updateProjectTemplate(template, entity);
+            document.getElementById("entityLead").innerText = help[1];
             break;
         }
         default : {

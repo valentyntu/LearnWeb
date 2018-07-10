@@ -9,58 +9,60 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<div class="container">
-    <div class="col">
+<div class="container" id="mainContainer">
 
         <nav class="nav navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand ml-3" href="#">Company Management</a>
+            <a class="navbar-brand ml-3" href="/">Company Management</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
+                    <li class="nav-item mx-2">
                         <a class="nav-link" onclick="loadProjects()">
                             Home
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item mx-2">
                         <a class="nav-link" onclick="loadProjects()">
                             Projects
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item mx-2">
                         <a class="nav-link" onclick="loadEmployees()">
                             Employees
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item mx-2">
                         <a class="nav-link" onclick="loadAssignments()">
                             Assignments
                         </a>
                     </li>
                 </ul>
             </div>
-
         </nav>
 
-        <main class="order-1 container-fluid">
-            <div hidden class="jumbotron-fluid" id="entityJumbotron">
+        <main class="order-1">
+            <div hidden class="jumbotron" id="entityJumbotron">
                 <h1 id="entityHeader" class="display-4"></h1>
-                <div id="entities" class="row justify-content-around align-items-stretch flex-wrap"></div>
+                <p class="lead" id="entityLead"></p>
+                <hr class="my-4">
+                <div id="entities" class="row justify-content-around align-items-stretch"></div>
             </div>
         </main>
-
     </div>
-</div>
 
 <template id="projectsTemplate">
-    <div class="card project align-self-auto m-2 flex-shrink-1 col-3">
+    <div class="card project align-self-auto flex-shrink-1 flex-column align-items-end">
         <img class="card-img-top logo" src="" alt="Card image cap">
-        <div class="card-body">
+        <div class="card-body flex-column align-items-stretch">
             <span hidden class="id"></span>
             <h4 class="name card-title"></h4>
             <p class="card-text description"></p>
             <p class="technologies">Technologies: </p>
-            <a class="btn btn-primary">Manage</a>
+            <a class="btn btn-primary manageProjectBtn">Manage</a>
         </div>
     </div>
 </template>
