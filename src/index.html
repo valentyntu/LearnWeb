@@ -11,78 +11,121 @@
 <body>
 <div class="container" id="mainContainer">
 
-        <nav class="nav navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand ml-3" href="/">Company Management</a>
+    <nav class="nav navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand ml-3" href="/">Company Management</a>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item mx-2">
-                        <a class="nav-link" onclick="loadProjects()">
-                            Home
-                        </a>
-                    </li>
-                    <li class="nav-item mx-2">
-                        <a class="nav-link" onclick="loadProjects()">
-                            Projects
-                        </a>
-                    </li>
-                    <li class="nav-item mx-2">
-                        <a class="nav-link" onclick="loadEmployees()">
-                            Employees
-                        </a>
-                    </li>
-                    <li class="nav-item mx-2">
-                        <a class="nav-link" onclick="loadAssignments()">
-                            Assignments
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mx-2">
+                    <a class="nav-link" onclick="loadProjects()">
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link" onclick="loadProjects()">
+                        Projects
+                    </a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link" onclick="loadEmployees()">
+                        Employees
+                    </a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link" onclick="loadAssignments()">
+                        Assignments
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-        <main class="order-1">
-            <div hidden class="jumbotron" id="entityJumbotron">
-                <h1 id="entityHeader" class="display-4"></h1>
-                <p class="lead" id="entityLead"></p>
-                <hr class="my-4">
-                <div id="entities" class="row justify-content-around align-items-stretch"></div>
-            </div>
-        </main>
-    </div>
+    <main>
+        <div class="jumbotron" id="entityJumbotron">
+            <h1 id="entityHeader" class="display-4"></h1>
+            <p class="lead" id="entityLead"></p>
+            <hr class="my-4">
+            <div id="entities" class="flex-wrap"></div>
+        </div>
+        <div id="projectDetails" class="hidden col-12 row">
+
+        </div>
+
+    </main>
+</div>
 
 <template id="projectsTemplate">
-    <div class="card project align-self-auto flex-shrink-1 flex-column align-items-end">
+    <div class="card project">
         <img class="card-img-top logo" src="" alt="Card image cap">
-        <div class="card-body flex-column align-items-stretch">
+        <div class="card-body">
             <span hidden class="id"></span>
             <h4 class="name card-title"></h4>
             <p class="card-text description"></p>
             <p class="technologies">Technologies: </p>
-            <a class="btn btn-primary manageProjectBtn">Manage</a>
+            <a class="btn btn-primary" onclick="switchToProjectDetails(this.parentNode.querySelector('.id').innerText)">
+                Manage
+            </a>
         </div>
     </div>
 </template>
 
-<template id="employeesTemplate">
-    <div class="employee">
+<template id="projectDetailsTemplate">
+    <div class="projectDetails">
         <span hidden class="id"></span>
-        <h2 class="name"></h2>
-        <p class="technologies"></p>
+        <h4 class="name card-title"></h4>
+        <p class="card-text description"></p>
+        <p class="technologies">Technologies: </p>
+        <h5>Currently working on this project:</h5>
+        <div>
+            <table class="table employees">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Skills</th>
+                    <th>From</th>
+                    <th>To</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            <a class="btn btn-primary" onclick="">
+                Assign
+            </a>
+        </div>
+    </div>
+</template>
+
+<template id="employeeRowTemplate">
+    <tr class="employeeRow">
+        <td class="name"></td>
+        <td class="technologies"></td>
+        <td class="dateFrom"></td>
+        <td class="dateTo"></td>
+    </tr>
+</template>
+
+<template id="employeesTemplate">
+    <div class="employee row justify-content-between my-2 ">
+        <span hidden class="id"></span>
+        <div class="employeeName col-4"></div>
+        <div class="technologies col-8"></div>
     </div>
 </template>
 
 <template id="assignmentsTemplate">
-    <div class="assignment">
+    <li class="assignment">
         <span hidden class="id"></span>
         <span hidden class="employeeId"></span>
         <span hidden class="companyId"></span>
         <p class="dateStartWorking"></p>
         <p class="dateEndWorking"></p>
-    </div>
+    </li>
 </template>
 
 <script src="js/script.js"></script>

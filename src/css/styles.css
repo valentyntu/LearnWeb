@@ -7,3 +7,9 @@ body {
 
 .project {
   width: 21rem; }
+
+.hidden {
+  display: none; }
+
+.employees {
+  display: table; }

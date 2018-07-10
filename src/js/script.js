@@ -1,8 +1,10 @@
 let databaseURL = "http://localhost:4000/";
-let entityHeader = document.getElementById("entityHeader");
 
-window.onload = function () {
-    loadProjects();
+
+window.onload = async function () {
+    // loadProjects();
+    // loadEmployees();
+    switchToProjectDetails(1);
 };
 
 function loadEmployees() {
@@ -23,18 +25,16 @@ function get(entities) {
 }
 
 function load(entities) {
+    showJumbotron();
+    hideProjectDetails();
     get(entities).then(r => show(entities, r));
 }
 
 function showJumbotron() {
-    document.getElementById("entityJumbotron").removeAttribute("hidden");
+    document.getElementById("entityJumbotron").classList.remove("hidden");
 }
 
 function show(entityName, collection) {
-    entityHeader.innerText = getCapitalized(entityName);
-
-    showJumbotron();
-
     let entitiesView = document.getElementById("entities");
     let template = document.getElementById(entityName + "Template").content;
 
@@ -44,6 +44,25 @@ function show(entityName, collection) {
         templateClone.querySelector(".id").innerText = entity.id;
         updateTemplate(templateClone, entity, entityName);
         entitiesView.appendChild(templateClone);
+    }
+    switch (entityName) {
+        case "assignments": {
+            updateEntityHeadings(entityName, 2);
+            break;
+        }
+        case "employees": {
+            updateEntityHeadings(entityName, 0);
+            setEntityCardFlexDirection("column");
+            break;
+        }
+        case "projects": {
+            updateEntityHeadings(entityName, 1);
+            setEntityCardFlexDirection("row");
+            break;
+        }
+        default : {
+
+        }
     }
 }
 
@@ -58,26 +77,26 @@ function getCurrentProjects(employee) {
         .then(p => p.json());
 }
 
-function updateEmployeeTemplate(template, entity) {
-    let entityName = template.querySelector(".name");
-    entityName.innerText = entity.name;
+function updateEmployeeTemplate(template, employee) {
+    let entityName = template.querySelector(".employeeName");
+    entityName.innerText = employee.name;
 
     let technologies = template.querySelector(".technologies");
-    technologies.innerText += entity.technologies;
+    technologies.innerText += employee.technologies;
 }
 
-function updateProjectTemplate(template, entity) {
+function updateProjectTemplate(template, project) {
     let entityName = template.querySelector(".name");
-    entityName.innerText = entity.name;
+    entityName.innerText = project.name;
 
     let technologies = template.querySelector(".technologies");
-    technologies.innerText += entity.technologies;
+    technologies.innerText += project.technologies;
 
     let description = template.querySelector(".description");
-    description.innerText += entity.description;
+    description.innerText += project.description;
 
     let logo = template.querySelector(".logo");
-    logo.setAttribute("src", entity.image);
+    logo.setAttribute("src", project.image);
 }
 
 function updateAssignmentTemplate() {
@@ -85,10 +104,27 @@ function updateAssignmentTemplate() {
 }
 
 let help = [
-    "",
+    "This is the list of all employees of the company.",
     "Here you can see all current projects. To see detailed info and assign new employees press 'Manage' button.",
     ""
 ];
+
+let entityLead = document.getElementById("entityLead");
+
+function updateEntityLead(lead) {
+    entityLead.innerText = help[lead];
+}
+
+let entityHeader = document.getElementById("entityHeader");
+
+function updateEntityHeader(header) {
+    entityHeader.innerText = header;
+}
+
+function updateEntityHeadings(entityName, lead) {
+    updateEntityHeader(getCapitalized(entityName));
+    updateEntityLead(lead);
+}
 
 function updateTemplate(template, entity, entityName) {
     let entityId = template.querySelector(".id");
@@ -97,23 +133,114 @@ function updateTemplate(template, entity, entityName) {
     switch (entityName) {
         case "assignments": {
             updateAssignmentTemplate();
-            document.getElementById("entityLead").innerText = help[2];
             break;
         }
         case "employees": {
             updateEmployeeTemplate(template, entity);
-            document.getElementById("entityLead").innerText = help[0];
             break;
         }
         case "projects": {
             updateProjectTemplate(template, entity);
-            document.getElementById("entityLead").innerText = help[1];
             break;
         }
         default : {
 
         }
     }
+}
+
+function setEntityCardFlexDirection(direction) {
+    let entityContainer = document.getElementById("entities");
+    let rowAttributes = ["row", "justify-content-between", "align-items-stretch"];
+    let columnAttributes = ["column"];
+    if (direction === "column") {
+        removeAllClasses(entityContainer.classList, rowAttributes);
+        addAllClasses(entityContainer.classList, columnAttributes);
+    } else {
+        removeAllClasses(entityContainer.classList, columnAttributes);
+        addAllClasses(entityContainer.classList, rowAttributes);
+    }
+}
+
+function removeAllClasses(from, items) {
+    for (let item of items) {
+        from.remove(item);
+    }
+}
+
+function addAllClasses(target, items) {
+    for (let item of items) {
+        target.add(item);
+    }
+}
+
+function hideJumbotron() {
+    document.getElementById("entityJumbotron").classList.add("hidden");
+}
+
+async function getEmployees(project) {
+    let assignments = project.assignments;
+    let employees = [];
+    if (assignments.length > 0) {
+        for (let assignment of assignments) {
+            employees.push(await fetch(databaseURL + "employees/" + assignment.employee_id).then(r => (r.json())));
+        }
+    }
+    return employees;
+}
+
+function getProjectById(id) {
+    return fetch(databaseURL + "projects/" + id).then(r => r.json());
+}
+
+async function switchToProjectDetails(id) {
+    hideJumbotron();
+    showProjectDetails();
+    let projectDetails = document.getElementById("projectDetails");
+    projectDetails.innerHTML = "";
+    let template = document.getElementById("projectDetailsTemplate").content;
+    let templateClone = template.querySelector(".projectDetails").cloneNode(true);
+    let project = await getProjectById(id);
+    let employees = await getEmployees(project);
+    templateClone.querySelector(".id").innerText = id;
+    updateProjectDetailsTemplate(templateClone, project, employees);
+    projectDetails.appendChild(templateClone);
+}
+
+function updateProjectDetailsTemplate(template, project, employees) {
+    let entityName = template.querySelector(".name");
+    entityName.innerText = project.name;
+
+    let technologies = template.querySelector(".technologies");
+    technologies.innerText += project.technologies;
+
+    let description = template.querySelector(".description");
+    description.innerText += project.description;
+
+    let employeesTable = template.querySelector(".employees");
+    let employeeTemplate = document.getElementById("employeeRowTemplate").content;
+    let templateClone = employeeTemplate.querySelector(".employeeRow").cloneNode(true);
+
+    for (let employee of employees) {
+        updateEmployeeTableRowTemplate(templateClone, employee);
+        employeesTable.querySelector("tbody").appendChild(templateClone);
+    }
+}
+
+function updateEmployeeTableRowTemplate(templateClone, employee) {
+    templateClone.querySelector(".name").innerText = employee.name;
+    templateClone.querySelector(".technologies").innerText = employee.technologies;
+    templateClone.querySelector(".dateFrom").innerText = employee.dateFrom;
+    templateClone.querySelector(".dateTo").innerText = employee.dateTo;
+}
+
+
+function showProjectDetails() {
+    document.getElementById("projectDetails").classList.remove("hidden");
+}
+
+function hideProjectDetails() {
+    document.getElementById("projectDetails").classList.add("hidden");
 }
 
 function getSingleFromPlural(pluralNoun) {
