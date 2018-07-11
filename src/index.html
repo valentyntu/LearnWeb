@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company Management</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -74,30 +75,30 @@
 </template>
 
 <template id="projectDetailsTemplate">
-    <div class="projectDetails">
+    <div class="projectDetails container">
         <span hidden class="id"></span>
         <h4 class="name card-title"></h4>
         <p class="card-text description"></p>
         <p class="technologies">Technologies: </p>
-        <h5>Currently working on this project:</h5>
-        <div>
-            <table class="table employees">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Skills</th>
-                    <th>From</th>
-                    <th>To</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-            <a class="btn btn-primary" onclick="">
-                Assign
-            </a>
+        <div class="container row justify-content-between mb-2">
+            <div class="h5">Currently working on this project:</div>
+            <button class="btn btn-primary align-self-end" data-toggle="modal" data-target="#assignEmployeeModal">
+                Assign new
+            </button>
         </div>
+        <table class="table employees">
+            <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th>Skills</th>
+                <th>From</th>
+                <th>To</th>
+            </tr>
+            </thead>
+            <tbody class="tableBody">
+
+            </tbody>
+        </table>
     </div>
 </template>
 
@@ -126,6 +127,46 @@
         <p class="dateStartWorking"></p>
         <p class="dateEndWorking"></p>
     </li>
+</template>
+
+<div id="assignEmployeeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Assign new employee to <br>
+                    <div class="projectName"></div>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="column" id="assignEmployeeForm">
+                    <select class="form-control select">
+
+                    </select>
+                    <div class="form-control my-2">
+                        <label>Starts to work:</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="form-control">
+                        <label>Finishes to work:</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <input type="submit" id="submitAssignToProject" class="btn btn-success form-control my-2">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<template id="optionTemplate">
+    <option class="option">
+        <div class="name"></div>
+        :
+        <div class="technologies"></div>
+    </option>
 </template>
 
 <script src="js/script.js"></script>

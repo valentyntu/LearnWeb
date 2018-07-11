@@ -4,6 +4,9 @@ let databaseURL = "http://localhost:4000/";
 window.onload = async function () {
     // loadProjects();
     // loadEmployees();
+    document.getElementById("assignEmployeeForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+    });
     switchToProjectDetails(1);
 };
 
@@ -193,9 +196,40 @@ function getProjectById(id) {
     return fetch(databaseURL + "projects/" + id).then(r => r.json());
 }
 
+async function getNotEmployedEmployees(project) {
+    let alreadyAssignedEmployeesIds = project.assignments.map(a => a.employee_id);
+    let allEmployees = await get("employees");
+
+    let result = [];
+    for (let e of allEmployees) {
+        if (!alreadyAssignedEmployeesIds.includes(e.id)) {
+            result.push(e);
+        }
+    }
+    return result;
+}
+
+async function updateModal(project) {
+    let notEmployedEmployees = await getNotEmployedEmployees(project);
+
+    let projectName = document.getElementById("assignEmployeeModal").querySelector(".projectName");
+    projectName.innerText += "\"" + project.name + "\" project.";
+
+    let template = document.getElementById("optionTemplate").content;
+    let select = document.getElementById("assignEmployeeModal").querySelector(".select");
+
+    for (let e of notEmployedEmployees) {
+        let templateClone = template.cloneNode(true);
+        templateClone.querySelector(".name").innerText = e.name;
+        templateClone.querySelector(".technologies").innerText = e.technologies;
+        select.appendChild(templateClone);
+    }
+}
+
 async function switchToProjectDetails(id) {
     hideJumbotron();
     showProjectDetails();
+
     let projectDetails = document.getElementById("projectDetails");
     projectDetails.innerHTML = "";
     let template = document.getElementById("projectDetailsTemplate").content;
@@ -204,6 +238,7 @@ async function switchToProjectDetails(id) {
     let employees = await getEmployees(project);
     templateClone.querySelector(".id").innerText = id;
     updateProjectDetailsTemplate(templateClone, project, employees);
+    updateModal(project);
     projectDetails.appendChild(templateClone);
 }
 
@@ -219,21 +254,27 @@ function updateProjectDetailsTemplate(template, project, employees) {
 
     let employeesTable = template.querySelector(".employees");
     let employeeTemplate = document.getElementById("employeeRowTemplate").content;
-    let templateClone = employeeTemplate.querySelector(".employeeRow").cloneNode(true);
 
     for (let employee of employees) {
-        updateEmployeeTableRowTemplate(templateClone, employee);
-        employeesTable.querySelector("tbody").appendChild(templateClone);
+        let templateClone = employeeTemplate.querySelector(".employeeRow").cloneNode(true);
+        updateEmployeeTableRowTemplate(templateClone, employee, project);
+        employeesTable.querySelector(".tableBody").appendChild(templateClone);
     }
 }
 
-function updateEmployeeTableRowTemplate(templateClone, employee) {
+function updateEmployeeTableRowTemplate(templateClone, employee, project) {
     templateClone.querySelector(".name").innerText = employee.name;
     templateClone.querySelector(".technologies").innerText = employee.technologies;
-    templateClone.querySelector(".dateFrom").innerText = employee.dateFrom;
-    templateClone.querySelector(".dateTo").innerText = employee.dateTo;
+    var options = {year: 'numeric', month: 'long', day: 'numeric'};
+    for (let a of project.assignments) {
+        if (a.employee_id === employee.id) {
+            let dateFrom = new Date(a.dateFrom);
+            templateClone.querySelector(".dateFrom").innerText = dateFrom.toLocaleDateString("en-US", options);
+            let dateTo = new Date(a.dateTo);
+            templateClone.querySelector(".dateTo").innerText = dateTo.toLocaleDateString("en-US", options);
+        }
+    }
 }
-
 
 function showProjectDetails() {
     document.getElementById("projectDetails").classList.remove("hidden");

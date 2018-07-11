@@ -57,19 +57,19 @@
         {
           "id": 1,
           "employee_id": 1,
-          "date_from": "",
-          "date_to": ""
+          "dateFrom": "8-1-2017",
+          "dateTo": "9-17-2018"
         },
         {
           "id": 2,
           "employee_id": 3,
-          "date_from": "",
-          "date_to": ""
+          "dateFrom": "1-1-2016",
+          "dateTo": "12-30-2020"
         },{
           "id": 3,
           "employee_id": 5,
-          "date_from": "",
-          "date_to": ""
+          "dateFrom": "1-1-2015",
+          "dateTo": "7-7-2019"
         }
       ]
     },
