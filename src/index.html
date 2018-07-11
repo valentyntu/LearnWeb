@@ -10,40 +10,36 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+<nav class="nav navbar-expand-lg navbar-dark bg-dark">
+
+    <a class="navbar-brand ml-3" href="#" onclick="renderProjects()">Company Management</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item mx-2">
+                <a class="nav-link" onclick="renderProjects()">
+                    Home
+                </a>
+            </li>
+            <li class="nav-item mx-2">
+                <a class="nav-link" onclick="renderProjects()">
+                    Projects
+                </a>
+            </li>
+            <li class="nav-item mx-2">
+                <a class="nav-link" onclick="renderEmployees()">
+                    Employees
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
 <div class="container" id="mainContainer">
 
-    <nav class="nav navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand ml-3" href="/">Company Management</a>
-
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item mx-2">
-                    <a class="nav-link" onclick="loadProjects()">
-                        Home
-                    </a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link" onclick="loadProjects()">
-                        Projects
-                    </a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link" onclick="loadEmployees()">
-                        Employees
-                    </a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link" onclick="loadAssignments()">
-                        Assignments
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
 
     <main>
         <div class="jumbotron" id="entityJumbotron">
@@ -67,7 +63,7 @@
             <h4 class="name card-title"></h4>
             <p class="card-text description"></p>
             <p class="technologies">Technologies: </p>
-            <a class="btn btn-primary" onclick="switchToProjectDetails(this.parentNode.querySelector('.id').innerText)">
+            <a class="btn btn-dark" href="#" onclick="switchToProjectDetails(this.parentNode.querySelector('.id').innerText)">
                 Manage
             </a>
         </div>
@@ -82,17 +78,18 @@
         <p class="technologies">Technologies: </p>
         <div class="container row justify-content-between mb-2">
             <div class="h5">Currently working on this project:</div>
-            <button class="btn btn-primary align-self-end" data-toggle="modal" data-target="#assignEmployeeModal">
+            <button class="btn btn-success align-self-end" data-toggle="modal" data-target="#assignEmployeeModal">
                 Assign new
             </button>
         </div>
-        <table class="table employees">
+        <table class="table employees table-bordered">
             <thead class="thead-dark">
             <tr>
                 <th>Name</th>
                 <th>Skills</th>
                 <th>From</th>
                 <th>To</th>
+                <th></th>
             </tr>
             </thead>
             <tbody class="tableBody">
@@ -108,6 +105,9 @@
         <td class="technologies"></td>
         <td class="dateFrom"></td>
         <td class="dateTo"></td>
+        <td>
+            <button class="btn btn-danger">Dismiss</button>
+        </td>
     </tr>
 </template>
 
@@ -117,16 +117,6 @@
         <div class="employeeName col-4"></div>
         <div class="technologies col-8"></div>
     </div>
-</template>
-
-<template id="assignmentsTemplate">
-    <li class="assignment">
-        <span hidden class="id"></span>
-        <span hidden class="employeeId"></span>
-        <span hidden class="companyId"></span>
-        <p class="dateStartWorking"></p>
-        <p class="dateEndWorking"></p>
-    </li>
 </template>
 
 <div id="assignEmployeeModal" class="modal fade" role="dialog">
@@ -140,22 +130,21 @@
             </div>
             <div class="modal-body">
                 <form class="column" id="assignEmployeeForm">
-                    <select class="form-control select">
-
+                    <select class="form-control select" id="selectEmployee" required>
                     </select>
                     <div class="form-control my-2">
                         <label>Starts to work:</label>
-                        <input type="date" class="form-control">
+                        <input type="date" id="dateStart" class="form-control">
                     </div>
                     <div class="form-control">
                         <label>Finishes to work:</label>
-                        <input type="date" class="form-control">
+                        <input type="date" id="dateEnd" class="form-control">
                     </div>
                     <input type="submit" id="submitAssignToProject" class="btn btn-success form-control my-2">
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="btnCloseModal" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

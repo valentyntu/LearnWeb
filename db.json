@@ -55,21 +55,19 @@
       "technologies": "Android, IOS, Frontend, Backend",
       "assignments": [
         {
-          "id": 1,
           "employee_id": 1,
-          "dateFrom": "8-1-2017",
-          "dateTo": "9-17-2018"
+          "dateFrom": "",
+          "dateTo": ""
         },
         {
-          "id": 2,
           "employee_id": 3,
-          "dateFrom": "1-1-2016",
-          "dateTo": "12-30-2020"
-        },{
-          "id": 3,
-          "employee_id": 5,
-          "dateFrom": "1-1-2015",
-          "dateTo": "7-7-2019"
+          "dateFrom": "",
+          "dateTo": ""
+        },
+        {
+          "employee_id": 2,
+          "dateFrom": "",
+          "dateTo": ""
         }
       ]
     },
@@ -79,7 +77,18 @@
       "name": "Main website",
       "description": "Internal project - the main website of the company.",
       "technologies": "Android, IOS, Frontend, Backend, Wordpress",
-      "assignments": []
+      "assignments": [
+        {
+          "employee_id": 2,
+          "dateFrom": "",
+          "dateTo": ""
+        },
+        {
+          "employee_id": 1,
+          "dateFrom": "",
+          "dateTo": ""
+        }
+      ]
     },
     {
       "id": 3,
@@ -87,7 +96,18 @@
       "name": "E-library",
       "description": "Web-application for finding, buying and downloading books.",
       "technologies": "WEB, Frontend, Backend",
-      "assignments": []
+      "assignments": [
+        {
+          "employee_id": 5,
+          "dateFrom": "",
+          "dateTo": ""
+        },
+        {
+          "employee_id": 1,
+          "dateFrom": "",
+          "dateTo": ""
+        }
+      ]
     }
   ]
 }

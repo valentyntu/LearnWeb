@@ -1,25 +1,51 @@
 let databaseURL = "http://localhost:4000/";
 
+let project;
 
-window.onload = async function () {
-    // loadProjects();
-    // loadEmployees();
-    document.getElementById("assignEmployeeForm").addEventListener("submit", function (e) {
+window.onload = function () {
+    renderProjects();
+
+    let form = document.getElementById("assignEmployeeForm");
+    form.addEventListener("submit", function (e) {
         e.preventDefault();
+        let assignment = {
+            employee_id: 0,
+            dateFrom: "",
+            dateTo: ""
+        };
+        assignment.employee_id = parseInt(form.querySelector("#selectEmployee").value);
+        assignment.dateFrom = form.querySelector("#dateStart").value;
+        assignment.dateTo = form.querySelector("#dateEnd").value;
+        project.assignments.push(assignment);
+        $("[data-dismiss=modal]").trigger({type: "click"});
+        updateProject(project)
+            .then(p => p.json())
+            .then(p => switchToProjectDetails(p.id));
     });
-    switchToProjectDetails(1);
+
 };
 
-function loadEmployees() {
-    return load("employees");
+function updateProject(project) {
+    return fetch(databaseURL + "projects/" + project.id, {
+        method: 'PATCH',
+        body: JSON.stringify(project),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
 }
 
-function loadProjects() {
-    return load("projects");
+function removeAssignment(project, employee_id) {
+    project.assignments = project.assignments.filter(a => a.employee_id != employee_id);
+    return updateProject(project);
 }
 
-function loadAssignments() {
-    return load("assignments");
+function renderEmployees() {
+    return render("employees");
+}
+
+function renderProjects() {
+    return render("projects");
 }
 
 function get(entities) {
@@ -27,7 +53,7 @@ function get(entities) {
         .then(r => r.json());
 }
 
-function load(entities) {
+function render(entities) {
     showJumbotron();
     hideProjectDetails();
     get(entities).then(r => show(entities, r));
@@ -100,10 +126,6 @@ function updateProjectTemplate(template, project) {
 
     let logo = template.querySelector(".logo");
     logo.setAttribute("src", project.image);
-}
-
-function updateAssignmentTemplate() {
-
 }
 
 let help = [
@@ -186,7 +208,8 @@ async function getEmployees(project) {
     let employees = [];
     if (assignments.length > 0) {
         for (let assignment of assignments) {
-            employees.push(await fetch(databaseURL + "employees/" + assignment.employee_id).then(r => (r.json())));
+            employees.push(await fetch(databaseURL + "employees/" + assignment.employee_id)
+                .then(r => (r.json())));
         }
     }
     return employees;
@@ -213,13 +236,15 @@ async function updateModal(project) {
     let notEmployedEmployees = await getNotEmployedEmployees(project);
 
     let projectName = document.getElementById("assignEmployeeModal").querySelector(".projectName");
-    projectName.innerText += "\"" + project.name + "\" project.";
+    projectName.innerText = "\"" + project.name + "\".";
 
     let template = document.getElementById("optionTemplate").content;
     let select = document.getElementById("assignEmployeeModal").querySelector(".select");
+    select.innerHTML = "";
 
     for (let e of notEmployedEmployees) {
         let templateClone = template.cloneNode(true);
+        templateClone.querySelector("option").setAttribute("value", e.id);
         templateClone.querySelector(".name").innerText = e.name;
         templateClone.querySelector(".technologies").innerText = e.technologies;
         select.appendChild(templateClone);
@@ -234,7 +259,7 @@ async function switchToProjectDetails(id) {
     projectDetails.innerHTML = "";
     let template = document.getElementById("projectDetailsTemplate").content;
     let templateClone = template.querySelector(".projectDetails").cloneNode(true);
-    let project = await getProjectById(id);
+    project = await getProjectById(id);
     let employees = await getEmployees(project);
     templateClone.querySelector(".id").innerText = id;
     updateProjectDetailsTemplate(templateClone, project, employees);
@@ -265,13 +290,26 @@ function updateProjectDetailsTemplate(template, project, employees) {
 function updateEmployeeTableRowTemplate(templateClone, employee, project) {
     templateClone.querySelector(".name").innerText = employee.name;
     templateClone.querySelector(".technologies").innerText = employee.technologies;
-    var options = {year: 'numeric', month: 'long', day: 'numeric'};
+    templateClone.querySelector(".btn-danger").addEventListener('click', ev => removeAssignment(project, employee.id)
+        .then(a => a.json())
+        .then(switchToProjectDetails(project.id)));
+    let options = {year: 'numeric', month: 'long', day: 'numeric'};
     for (let a of project.assignments) {
         if (a.employee_id === employee.id) {
-            let dateFrom = new Date(a.dateFrom);
-            templateClone.querySelector(".dateFrom").innerText = dateFrom.toLocaleDateString("en-US", options);
-            let dateTo = new Date(a.dateTo);
-            templateClone.querySelector(".dateTo").innerText = dateTo.toLocaleDateString("en-US", options);
+            if (a.dateFrom == "") {
+                templateClone.querySelector(".dateFrom").innerText = "NOT SET"
+            } else {
+                let dateFrom = new Date(a.dateFrom);
+                templateClone.querySelector(".dateFrom").innerText = dateFrom.toLocaleDateString("en-US", options);
+            }
+
+            if (a.dateTo == "") {
+                templateClone.querySelector(".dateTo").innerText = "NOT SET"
+            } else {
+                let dateTo = new Date(a.dateTo);
+                templateClone.querySelector(".dateTo").innerText = dateTo.toLocaleDateString("en-US", options);
+            }
+
         }
     }
 }
