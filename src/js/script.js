@@ -41,10 +41,14 @@ function removeAssignment(project, employee_id) {
 }
 
 function renderEmployees() {
+    document.getElementById("projects").classList.add("hidden");
+    document.getElementById("employeesTable").classList.remove("hidden");
     return render("employees");
 }
 
 function renderProjects() {
+    document.getElementById("employeesTable").classList.add("hidden");
+    document.getElementById("projects").classList.remove("hidden");
     return render("projects");
 }
 
@@ -64,7 +68,13 @@ function showJumbotron() {
 }
 
 function show(entityName, collection) {
-    let entitiesView = document.getElementById("entities");
+    let entitiesView;
+    if (entityName === "projects") {
+        entitiesView = document.getElementById("projects");
+    } else {
+        entitiesView = document.getElementById("employees");
+    }
+
     let template = document.getElementById(entityName + "Template").content;
 
     entitiesView.innerHTML = "";
@@ -75,18 +85,12 @@ function show(entityName, collection) {
         entitiesView.appendChild(templateClone);
     }
     switch (entityName) {
-        case "assignments": {
-            updateEntityHeadings(entityName, 2);
-            break;
-        }
         case "employees": {
             updateEntityHeadings(entityName, 0);
-            setEntityCardFlexDirection("column");
             break;
         }
         case "projects": {
             updateEntityHeadings(entityName, 1);
-            setEntityCardFlexDirection("row");
             break;
         }
         default : {
@@ -156,10 +160,6 @@ function updateTemplate(template, entity, entityName) {
     entityId.innerText = entity.id;
 
     switch (entityName) {
-        case "assignments": {
-            updateAssignmentTemplate();
-            break;
-        }
         case "employees": {
             updateEmployeeTemplate(template, entity);
             break;
@@ -251,6 +251,34 @@ async function updateModal(project) {
     }
 }
 
+function switchModalToEditMode(ev) {
+    let modal = document.getElementById("assignEmployeeModal");
+    let row = ev.parentNode.parentNode;
+    modal.querySelector(".select").innerHTML = "";
+    let nameOption = document.createElement("option");
+    nameOption.classList.add("option");
+    nameOption.innerText = row.querySelector(".name").value + " : " + row.querySelector(".technologies").value;
+    nameOption.value = row.querySelector(".id").value;
+    nameOption.setAttribute("selected", "selected");
+    nameOption.setAttribute("disabled", "disabled");
+    modal.querySelector(".select").appendChild(nameOption);
+
+    let prevDateStart = row.querySelector(".dateFrom").value;
+    if (prevDateStart === "NOT SET") {
+        modal.querySelector("#dateStart").value = "";
+    } else {
+        modal.querySelector("#dateStart").value = prevDateStart;
+    }
+    let prevDateEnd = row.querySelector(".dateTo").value;
+    if (prevDateEnd === "NOT SET") {
+        modal.querySelector("#dateEnd").value = "";
+    } else {
+        modal.querySelector("#dateEnd").value = prevDateEnd;
+    }
+
+    modal.querySelector("#submitAssignToProject").value = "Confirm";
+}
+
 async function switchToProjectDetails(id) {
     hideJumbotron();
     showProjectDetails();
@@ -279,6 +307,10 @@ function updateProjectDetailsTemplate(template, project, employees) {
 
     let employeesTable = template.querySelector(".employees");
     let employeeTemplate = document.getElementById("employeeRowTemplate").content;
+
+    let logo = template.querySelector(".logo");
+    logo.setAttribute("src", project.image);
+    logo.setAttribute("src", project.image);
 
     for (let employee of employees) {
         let templateClone = employeeTemplate.querySelector(".employeeRow").cloneNode(true);

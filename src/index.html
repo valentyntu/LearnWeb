@@ -14,7 +14,8 @@
 
     <a class="navbar-brand ml-3" href="#" onclick="renderProjects()">Company Management</a>
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -46,7 +47,18 @@
             <h1 id="entityHeader" class="display-4"></h1>
             <p class="lead" id="entityLead"></p>
             <hr class="my-4">
-            <div id="entities" class="flex-wrap"></div>
+            <div id="projects" class="flex-wrap row justify-content-between align-items-stretch"></div>
+            <table id="employeesTable"  class="table table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Skills</th>
+                </tr>
+                </thead>
+                <tbody id="employees">
+
+                </tbody>
+            </table>
         </div>
         <div id="projectDetails" class="hidden col-12 row">
 
@@ -63,7 +75,8 @@
             <h4 class="name card-title"></h4>
             <p class="card-text description"></p>
             <p class="technologies">Technologies: </p>
-            <a class="btn btn-dark" href="#" onclick="switchToProjectDetails(this.parentNode.querySelector('.id').innerText)">
+            <a class="btn btn-dark" href="#"
+               onclick="switchToProjectDetails(this.parentNode.querySelector('.id').innerText)">
                 Manage
             </a>
         </div>
@@ -71,12 +84,20 @@
 </template>
 
 <template id="projectDetailsTemplate">
-    <div class="projectDetails container">
-        <span hidden class="id"></span>
-        <h4 class="name card-title"></h4>
-        <p class="card-text description"></p>
-        <p class="technologies">Technologies: </p>
-        <div class="container row justify-content-between mb-2">
+    <div class="projectDetails container m-2">
+        <div class="d-flex row flex-nowrap justify-content-between">
+            <div>
+                <span hidden class="id"></span>
+                <h2 class="name card-title"></h2>
+                <span class="card-text description lead"></span>
+                <p class="technologies">Technologies: </p>
+            </div>
+            <div class="col-4">
+                <img class="card-img-top logo" src="" alt="Card image cap">
+            </div>
+        </div>
+
+        <div class="container row justify-content-between my-2">
             <div class="h5">Currently working on this project:</div>
             <button class="btn btn-success align-self-end" data-toggle="modal" data-target="#assignEmployeeModal">
                 Assign new
@@ -90,6 +111,7 @@
                 <th>From</th>
                 <th>To</th>
                 <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody class="tableBody">
@@ -101,10 +123,15 @@
 
 <template id="employeeRowTemplate">
     <tr class="employeeRow">
+        <td class="hidden id"></td>
         <td class="name"></td>
         <td class="technologies"></td>
+        s
         <td class="dateFrom"></td>
         <td class="dateTo"></td>
+        <td>
+            <button class="btn btn-secondary" onclick="switchModalToEditMode(this)">Edit</button>
+        </td>
         <td>
             <button class="btn btn-danger">Dismiss</button>
         </td>
@@ -112,11 +139,11 @@
 </template>
 
 <template id="employeesTemplate">
-    <div class="employee row justify-content-between my-2 ">
-        <span hidden class="id"></span>
-        <div class="employeeName col-4"></div>
-        <div class="technologies col-8"></div>
-    </div>
+    <tr class="employee">
+        <td hidden class="id"></td>
+        <td class="employeeName"></td>
+        <td class="technologies"></td>
+    </tr>
 </template>
 
 <div id="assignEmployeeModal" class="modal fade" role="dialog">
@@ -140,7 +167,8 @@
                         <label>Finishes to work:</label>
                         <input type="date" id="dateEnd" class="form-control">
                     </div>
-                    <input type="submit" id="submitAssignToProject" class="btn btn-success form-control my-2">
+                    <input type="submit" value="Assign" id="submitAssignToProject"
+                           class="btn btn-success form-control my-2">
                 </form>
             </div>
             <div class="modal-footer">
@@ -158,10 +186,9 @@
     </option>
 </template>
 
-<script src="js/script.js"></script>
 <script src="js/jquery.min.js"></script>
 <script src="js/popper.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
-
+<script src="js/script.js"></script>
 </body>
 </html>

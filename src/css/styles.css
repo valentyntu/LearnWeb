@@ -6,7 +6,10 @@ body {
   background-color: white; }
 
 .project {
-  width: 21rem; }
+  width: 20rem;
+  display: flex;
+  flex-flow: column wrap;
+}
 
 .hidden {
   display: none; }

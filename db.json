@@ -87,6 +87,11 @@
           "employee_id": 1,
           "dateFrom": "",
           "dateTo": ""
+        },
+        {
+          "employee_id": 6,
+          "dateFrom": "2018-07-20",
+          "dateTo": "2018-07-29"
         }
       ]
     },
