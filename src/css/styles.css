@@ -16,3 +16,7 @@ body {
 
 .employees {
   display: table; }
+
+.product-details-image{
+    max-width: 300px;
+ }
