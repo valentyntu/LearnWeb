@@ -3,7 +3,8 @@ let databaseURL = "http://localhost:4000/";
 let project;
 
 window.onload = function () {
-    renderProjects();
+    // renderProjects();
+    switchToProjectDetails(2);
 
     let form = document.getElementById("assignEmployeeForm");
     form.addEventListener("submit", function (e) {
@@ -36,7 +37,7 @@ function updateProject(project) {
 }
 
 function removeAssignment(project, employee_id) {
-    project.assignments = project.assignments.filter(a => a.employee_id != employee_id);
+    project.assignments = project.assignments.filter(a => a.employee_id !== employee_id);
     return updateProject(project);
 }
 
@@ -97,17 +98,6 @@ function show(entityName, collection) {
 
         }
     }
-}
-
-function getCurrentAssignments(employee) {
-    return fetch(databaseURL + "assignments/?employee_id=" + employee.id)
-        .then(r => r.json());
-}
-
-function getCurrentProjects(employee) {
-    return getCurrentAssignments(employee)
-        .then(a => fetch(databaseURL + "projects/?id=" + a.project_id))
-        .then(p => p.json());
 }
 
 function updateEmployeeTemplate(template, employee) {
@@ -174,31 +164,6 @@ function updateTemplate(template, entity, entityName) {
     }
 }
 
-function setEntityCardFlexDirection(direction) {
-    let entityContainer = document.getElementById("entities");
-    let rowAttributes = ["row", "justify-content-between", "align-items-stretch"];
-    let columnAttributes = ["column"];
-    if (direction === "column") {
-        removeAllClasses(entityContainer.classList, rowAttributes);
-        addAllClasses(entityContainer.classList, columnAttributes);
-    } else {
-        removeAllClasses(entityContainer.classList, columnAttributes);
-        addAllClasses(entityContainer.classList, rowAttributes);
-    }
-}
-
-function removeAllClasses(from, items) {
-    for (let item of items) {
-        from.remove(item);
-    }
-}
-
-function addAllClasses(target, items) {
-    for (let item of items) {
-        target.add(item);
-    }
-}
-
 function hideJumbotron() {
     document.getElementById("entityJumbotron").classList.add("hidden");
 }
@@ -257,7 +222,7 @@ function switchModalToEditMode(ev) {
     modal.querySelector(".select").innerHTML = "";
     let nameOption = document.createElement("option");
     nameOption.classList.add("option");
-    nameOption.innerText = row.querySelector(".name").value + " : " + row.querySelector(".technologies").value;
+    nameOption.innerText = row.querySelector(".name").innerText + " : " + row.querySelector(".technologies").innerText;
     nameOption.value = row.querySelector(".id").value;
     nameOption.setAttribute("selected", "selected");
     nameOption.setAttribute("disabled", "disabled");
@@ -281,7 +246,6 @@ function switchModalToEditMode(ev) {
 
 async function switchToProjectDetails(id) {
     hideJumbotron();
-    showProjectDetails();
 
     let projectDetails = document.getElementById("projectDetails");
     projectDetails.innerHTML = "";
@@ -293,6 +257,7 @@ async function switchToProjectDetails(id) {
     updateProjectDetailsTemplate(templateClone, project, employees);
     updateModal(project);
     projectDetails.appendChild(templateClone);
+    showProjectDetails();
 }
 
 function updateProjectDetailsTemplate(template, project, employees) {
@@ -322,9 +287,11 @@ function updateProjectDetailsTemplate(template, project, employees) {
 function updateEmployeeTableRowTemplate(templateClone, employee, project) {
     templateClone.querySelector(".name").innerText = employee.name;
     templateClone.querySelector(".technologies").innerText = employee.technologies;
-    templateClone.querySelector(".btn-danger").addEventListener('click', ev => removeAssignment(project, employee.id)
-        .then(a => a.json())
-        .then(switchToProjectDetails(project.id)));
+    templateClone.querySelector(".btn-danger").addEventListener('click', ev =>
+        removeAssignment(project, employee.id)
+        .then(pr => pr.json())
+        .then(pr => switchToProjectDetails(pr.id)));
+
     let options = {year: 'numeric', month: 'long', day: 'numeric'};
     for (let a of project.assignments) {
         if (a.employee_id === employee.id) {
@@ -341,7 +308,6 @@ function updateEmployeeTableRowTemplate(templateClone, employee, project) {
                 let dateTo = new Date(a.dateTo);
                 templateClone.querySelector(".dateTo").innerText = dateTo.toLocaleDateString("en-US", options);
             }
-
         }
     }
 }
