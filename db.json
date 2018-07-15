@@ -85,13 +85,13 @@
         },
         {
           "employee_id": 2,
-          "dateFrom": "",
+          "dateFrom": "2018-06-25",
           "dateTo": ""
         },
         {
           "employee_id": 3,
-          "dateFrom": "",
-          "dateTo": ""
+          "dateFrom": "2018-07-01",
+          "dateTo": "2018-08-05"
         },
         {
           "employee_id": 4,

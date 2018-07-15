@@ -185,11 +185,16 @@ function closeModal() {
 
 function handleCreateAssignment(e) {
     e.preventDefault();
-    project.assignments.push(createNewAssignment());
-    closeModal();
-    updateProject(project)
-        .then(p => p.json())
-        .then(p => switchToProjectDetails(p.id));
+    let newAssignment = createNewAssignment();
+    if (validateAssignment(newAssignment)) {
+        project.assignments.push();
+        closeModal();
+        updateProject(project)
+            .then(p => p.json())
+            .then(p => switchToProjectDetails(p.id));
+    } else {
+        alert("Date of starting to work has to be before ending!");
+    }
 }
 
 function addCreateAssignmentHandler() {
@@ -235,22 +240,30 @@ function createNewAssignment() {
     return assignment;
 }
 
+function validateAssignment(assignment) {
+    return (assignment.dateTo === "" || (new Date(assignment.dateFrom) <= new Date(assignment.dateTo)))
+}
+
 function handleUpdateAssignment(e) {
     e.preventDefault();
     let updatedAssignment = createNewAssignment();
-    let newAssignments = [];
-    project.assignments.forEach(a => {
-        if (a.employee_id === updatedAssignment.employee_id){
-            newAssignments.push(updatedAssignment);
-        }  else {
-            newAssignments.push(a);
-        }
-    });
-    project.assignments = newAssignments;
-    closeModal();
-    updateProject(project)
-        .then(p => p.json())
-        .then(p => switchToProjectDetails(p.id));
+    if (validateAssignment(updatedAssignment)) {
+        let newAssignments = [];
+        project.assignments.forEach(a => {
+            if (a.employee_id === updatedAssignment.employee_id) {
+                newAssignments.push(updatedAssignment);
+            } else {
+                newAssignments.push(a);
+            }
+        });
+        project.assignments = newAssignments;
+        closeModal();
+        updateProject(project)
+            .then(p => p.json())
+            .then(p => switchToProjectDetails(p.id));
+    } else {
+        alert("Date of starting to work has to be before ending!");
+    }
 }
 
 function addUpdateAssignmentHandler() {
