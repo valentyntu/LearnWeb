@@ -1,29 +1,11 @@
 let databaseURL = "http://localhost:4000/";
 
+let form = document.getElementById("assignEmployeeForm");
 let project;
 
 window.onload = function () {
-    // renderProjects();
-    switchToProjectDetails(2);
-
-    let form = document.getElementById("assignEmployeeForm");
-    form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        let assignment = {
-            employee_id: 0,
-            dateFrom: "",
-            dateTo: ""
-        };
-        assignment.employee_id = parseInt(form.querySelector("#selectEmployee").value);
-        assignment.dateFrom = form.querySelector("#dateStart").value;
-        assignment.dateTo = form.querySelector("#dateEnd").value;
-        project.assignments.push(assignment);
-        $("[data-dismiss=modal]").trigger({type: "click"});
-        updateProject(project)
-            .then(p => p.json())
-            .then(p => switchToProjectDetails(p.id));
-    });
-
+    renderProjects();
+    // switchToProjectDetails(2);
 };
 
 function updateProject(project) {
@@ -197,7 +179,28 @@ async function getNotEmployedEmployees(project) {
     return result;
 }
 
-async function updateModal(project) {
+function closeModal() {
+    $("[data-dismiss=modal]").trigger({type: "click"});
+}
+
+function handleCreateAssignment(e) {
+    e.preventDefault();
+    project.assignments.push(createNewAssignment());
+    closeModal();
+    updateProject(project)
+        .then(p => p.json())
+        .then(p => switchToProjectDetails(p.id));
+}
+
+function addCreateAssignmentHandler() {
+    let form = document.getElementById("assignEmployeeForm");
+    form.removeEventListener("submit", handleUpdateAssignment);
+    form.addEventListener("submit", handleCreateAssignment);
+}
+
+async function switchModalToAssignMode() {
+    let modal = document.getElementById("assignEmployeeModal");
+
     let notEmployedEmployees = await getNotEmployedEmployees(project);
 
     let projectName = document.getElementById("assignEmployeeModal").querySelector(".projectName");
@@ -214,6 +217,45 @@ async function updateModal(project) {
         templateClone.querySelector(".technologies").innerText = e.technologies;
         select.appendChild(templateClone);
     }
+
+    modal.querySelector("#submitAssignToProject").value = "Assign";
+    addCreateAssignmentHandler();
+    document.getElementById("btnToggleModal").click();
+}
+
+function createNewAssignment() {
+    let assignment = {
+        employee_id: 0,
+        dateFrom: "",
+        dateTo: ""
+    };
+    assignment.employee_id = parseInt(form.querySelector("#selectEmployee").value);
+    assignment.dateFrom = form.querySelector("#dateStart").value;
+    assignment.dateTo = form.querySelector("#dateEnd").value;
+    return assignment;
+}
+
+function handleUpdateAssignment(e) {
+    e.preventDefault();
+    let updatedAssignment = createNewAssignment();
+    let newAssignments = [];
+    project.assignments.forEach(a => {
+        if (a.employee_id === updatedAssignment.employee_id){
+            newAssignments.push(updatedAssignment);
+        }  else {
+            newAssignments.push(a);
+        }
+    });
+    project.assignments = newAssignments;
+    closeModal();
+    updateProject(project)
+        .then(p => p.json())
+        .then(p => switchToProjectDetails(p.id));
+}
+
+function addUpdateAssignmentHandler() {
+    form.removeEventListener("submit", handleCreateAssignment);
+    form.addEventListener("submit", handleUpdateAssignment);
 }
 
 function switchModalToEditMode(ev) {
@@ -223,18 +265,17 @@ function switchModalToEditMode(ev) {
     let nameOption = document.createElement("option");
     nameOption.classList.add("option");
     nameOption.innerText = row.querySelector(".name").innerText + " : " + row.querySelector(".technologies").innerText;
-    nameOption.value = row.querySelector(".id").value;
+    nameOption.value = row.querySelector(".id").innerText;
     nameOption.setAttribute("selected", "selected");
-    nameOption.setAttribute("disabled", "disabled");
     modal.querySelector(".select").appendChild(nameOption);
 
-    let prevDateStart = row.querySelector(".dateFrom").value;
+    let prevDateStart = row.querySelector(".dateFrom").innerText;
     if (prevDateStart === "NOT SET") {
         modal.querySelector("#dateStart").value = "";
     } else {
         modal.querySelector("#dateStart").value = prevDateStart;
     }
-    let prevDateEnd = row.querySelector(".dateTo").value;
+    let prevDateEnd = row.querySelector(".dateTo").innerText;
     if (prevDateEnd === "NOT SET") {
         modal.querySelector("#dateEnd").value = "";
     } else {
@@ -242,6 +283,9 @@ function switchModalToEditMode(ev) {
     }
 
     modal.querySelector("#submitAssignToProject").value = "Confirm";
+    addUpdateAssignmentHandler();
+
+    document.getElementById("btnToggleModal").click();
 }
 
 async function switchToProjectDetails(id) {
@@ -255,7 +299,6 @@ async function switchToProjectDetails(id) {
     let employees = await getEmployees(project);
     templateClone.querySelector(".id").innerText = id;
     updateProjectDetailsTemplate(templateClone, project, employees);
-    updateModal(project);
     projectDetails.appendChild(templateClone);
     showProjectDetails();
 }
@@ -289,24 +332,28 @@ function updateEmployeeTableRowTemplate(templateClone, employee, project) {
     templateClone.querySelector(".technologies").innerText = employee.technologies;
     templateClone.querySelector(".btn-danger").addEventListener('click', ev =>
         removeAssignment(project, employee.id)
-        .then(pr => pr.json())
-        .then(pr => switchToProjectDetails(pr.id)));
+            .then(pr => pr.json())
+            .then(pr => switchToProjectDetails(pr.id)));
 
     let options = {year: 'numeric', month: 'long', day: 'numeric'};
     for (let a of project.assignments) {
         if (a.employee_id === employee.id) {
-            if (a.dateFrom == "") {
-                templateClone.querySelector(".dateFrom").innerText = "NOT SET"
+            templateClone.querySelector(".dateFrom").innerText = a.dateFrom;
+            templateClone.querySelector(".dateTo").innerText = a.dateTo;
+            templateClone.querySelector(".id").innerText = a.employee_id;
+
+            if (a.dateFrom === "") {
+                templateClone.querySelector(".formattedDateFrom").innerText = "NOT SET"
             } else {
                 let dateFrom = new Date(a.dateFrom);
-                templateClone.querySelector(".dateFrom").innerText = dateFrom.toLocaleDateString("en-US", options);
+                templateClone.querySelector(".formattedDateFrom").innerText = dateFrom.toLocaleDateString("en-US", options);
             }
 
-            if (a.dateTo == "") {
-                templateClone.querySelector(".dateTo").innerText = "NOT SET"
+            if (a.dateTo === "") {
+                templateClone.querySelector(".formattedDateTo").innerText = "NOT SET"
             } else {
                 let dateTo = new Date(a.dateTo);
-                templateClone.querySelector(".dateTo").innerText = dateTo.toLocaleDateString("en-US", options);
+                templateClone.querySelector(".formattedDateTo").innerText = dateTo.toLocaleDateString("en-US", options);
             }
         }
     }

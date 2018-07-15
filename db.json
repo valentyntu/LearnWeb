@@ -60,14 +60,14 @@
           "dateTo": ""
         },
         {
-          "employee_id": 3,
+          "employee_id": 2,
           "dateFrom": "",
           "dateTo": ""
         },
         {
-          "employee_id": 2,
-          "dateFrom": "",
-          "dateTo": ""
+          "employee_id": 9,
+          "dateFrom": "2018-06-25",
+          "dateTo": "2018-07-26"
         }
       ]
     },
@@ -79,19 +79,29 @@
       "technologies": "Android, IOS, Frontend, Backend, Wordpress",
       "assignments": [
         {
+          "employee_id": 1,
+          "dateFrom": "2018-06-25",
+          "dateTo": "2018-08-04"
+        },
+        {
           "employee_id": 2,
           "dateFrom": "",
           "dateTo": ""
         },
         {
-          "employee_id": 1,
+          "employee_id": 3,
           "dateFrom": "",
           "dateTo": ""
         },
         {
-          "employee_id": 6,
-          "dateFrom": "2018-07-20",
-          "dateTo": "2018-07-29"
+          "employee_id": 4,
+          "dateFrom": "2018-07-17",
+          "dateTo": "2018-08-03"
+        },
+        {
+          "employee_id": 5,
+          "dateFrom": "",
+          "dateTo": ""
         }
       ]
     },
@@ -110,6 +120,11 @@
         {
           "employee_id": 1,
           "dateFrom": "",
+          "dateTo": ""
+        },
+        {
+          "employee_id": 2,
+          "dateFrom": "2018-07-06",
           "dateTo": ""
         }
       ]
